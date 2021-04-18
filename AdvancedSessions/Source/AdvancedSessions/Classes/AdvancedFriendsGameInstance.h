@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AdvancedVoiceInterface)
 	bool bEnableTalkingStatusDelegate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AdvancedControllerInterface)
+	bool bEnableControllerConnectionDelegate;
+
 	// If true we will auto join a session we have accepted in the overlay.
 	// This can get in the way of Beacon Sessions, you may want to disable it.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AdvancedFriendsInterface)
@@ -114,6 +117,13 @@ public:
 	FOnLoginStatusChangedDelegate PlayerLoginStatusChangedDelegate;
 	FDelegateHandle PlayerLoginStatusChangedDelegateHandle;
 
+	// Called when a Gamepad was connected or disconnected.
+	UFUNCTION(BlueprintImplementableEvent, Category = "AdvancedController", meta = (DisplayName = "OnControllerConnectionChanged"))
+	void OnControllerConnectionChanged(bool bConnected, int32 UserId, int32 ControllerId);
+
+	void OnControllerConnectionChangedMaster(bool bConnected, FPlatformUserId UserId, int32 ControllerId);
+	FDelegateHandle ControllerConnectionChangedDelegateHandle;
+
 
 	//*** Session Invite Received From Friend ***//
 	// REMOVED BECAUSE IT NEVER GETS CALLED
@@ -159,4 +169,3 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "AdvancedFriends")
 	void OnRemovedByFriend(const FBPUniqueNetId &InvitedPlayer, const FBPUniqueNetId &FriendRemoved);*/
 };
-
