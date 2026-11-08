@@ -287,8 +287,12 @@ void UFindSessionsCallbackProxyAdvanced::FilterSessionResults(const TArray<FBlue
 				setting = SessionResults[j].OnlineResult.Session.SessionSettings.Settings.Find(Filters[i].PropertyKeyPair.Key);
 
 				// Couldn't find this key
+				// Modified: Do not match unknown keys.
 				if (!setting)
-					continue;
+				{
+					bAddResult = false;
+					break;
+				}
 
 				if (!CompareVariants(setting->Data, Filters[i].PropertyKeyPair.Data, Filters[i].ComparisonOp))
 				{
