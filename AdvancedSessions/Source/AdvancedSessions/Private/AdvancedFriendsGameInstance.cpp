@@ -109,11 +109,13 @@ void UAdvancedFriendsGameInstance::Shutdown()
 		}
 	}
 
+#if !UE_SERVER
 	// Unregister controller connection changed callback.
 	if (bEnableControllerConnectionDelegate)
 	{
 		FCoreDelegates::OnControllerConnectionChange.Remove(ControllerConnectionChangedDelegateHandle);
 	}
+#endif
 
 	IOnlineIdentityPtr IdentityInterface = Online::GetIdentityInterface(GetWorld());
 
@@ -169,11 +171,13 @@ void UAdvancedFriendsGameInstance::Init()
 		}
 	}
 
+#if !UE_SERVER
 	// Handle controller connection changed.
 	if (bEnableControllerConnectionDelegate)
 	{
 		ControllerConnectionChangedDelegateHandle = FCoreDelegates::OnControllerConnectionChange.AddUObject(this, &ThisClass::OnControllerConnectionChangedMaster);
 	}
+#endif
 
 	IOnlineIdentityPtr IdentityInterface = Online::GetIdentityInterface(GetWorld());
 
@@ -421,5 +425,7 @@ void UAdvancedFriendsGameInstance::OnSessionInviteAcceptedMaster(const bool bWas
 
 void UAdvancedFriendsGameInstance::OnControllerConnectionChangedMaster(bool bConnected, FPlatformUserId UserId, int32 ControllerId)
 {
-	OnControllerConnectionChanged(bConnected, UserId, ControllerId);
+#if !UE_SERVER
+	OnControllerConnectionChanged(bConnected, UserId.GetInternalId(), ControllerId);
+#endif
 }
